@@ -1,0 +1,63 @@
+%{
+
+%}
+
+%%
+
+grammar
+  : /* empty */  { $$ = [] }
+  | rule grammar { $2.unshift($1) ; $$ = $2 }
+  ;
+
+rule 
+  : IDENTIFIER productions { $$ =  { type : 'rule', identifier : $1, productions : $2, } }
+  ;
+
+productions 
+  : /* empty */ { $$ = [] }
+  | production productions { $2.unshift($1) ; $$ = $2  }
+  ;
+
+production
+  : SYM_PIPE expansion SYM_ARROW term { $$ = { type : 'production', expansion : $2, term : $4 } }
+  ;
+
+expansion 
+  : /* empty */ { $$ = [] }
+  | symbol expansion { $2.unshift($1) ; $$ = $2 }
+  ;
+
+symbol 
+  : KEY_ID 
+  | KEY_STRING
+  | KEY_NUM 
+  | STRING { $$ = { type : 'string', value : $1 } }
+  | IDENTIFIER { $$ = { type : 'identifier', value : $1 } }
+  ;
+
+term 
+  : KEY_UNDERSCORE  
+  | IDENTIFIER arguments { $$ =  { type : 'identifier_arguments', identifier : $1, arguments : $2 } }
+  | STRING { $$ = { type : 'string', value : $1 } }
+  | NUMBER { $$ = { type : 'number', value : $1 } }
+  | SYM_DOLLAR NUMBER substitution { $$ =  { type : 'number_substitution', number : $2, substitution : $3 } }
+  ;
+
+arguments 
+  : /* empty */ { $$ = []}
+  | SYM_LPAREN arguments_list SYM_RPAREN { $$ = $2 }
+  ;
+arguments_list 
+  : /* empty */ { $$ = [] }
+  | term arguments_list_continuation { $2.unshift($1); $$ = $2 }
+  ;
+
+arguments_list_continuation 
+  : /* empty */ { $$ = [] }
+  | SYM_COMMA term arguments_list_continuation { $3.unshift($2) ; $$ = $3 }
+  ;
+
+substitution 
+  : /* empty */ { $$ = null }
+  | SYM_LBRACKET term SYM_RBRACKET { $$ = { 'type' : 'substitution', term : $2 } }
+  ;
