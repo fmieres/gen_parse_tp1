@@ -2,35 +2,10 @@ const llecaParser = require('./lleca.slr1.js')
 const util = require('util')
 const fs = require('fs')
 
-// let parsedSimpleExample = llecaParser.parse('hello | ID => "World"')
-// console.log('log: ',util.inspect(parsedSimpleExample, false, null));
-
-// let alumnos = fs.readFileSync('./tests_lleca/alumnos.ll', 'utf8')
-// let parsedAlumnos = llecaParser.parse(alumnos)
-// console.log('log: ',util.inspect(parsedAlumnos, false, null));
-
-// let robot = fs.readFileSync('./tests_lleca/robot.ll', 'utf8')
-// let parsedRobot = llecaParser.parse(robot)
-
 function parseFile(fileName){
   let read = fs.readFileSync(fileName, 'utf8')
   return llecaParser.parse(read)
 }
-
-/*function isVarTypeOf(_var, _type){
-  try {
-    return _var.constructor === _type
-  } catch(ex) {
-    return _var === _type
-  }
-}*/
-
-
-
-/* 4.1 */
-// let reservedRobot = discernReserved(parsedRobotReserved);
-// let reservedAlumnos = discernReserved(parsedAlumnosReserved);
-/* *********************** */
 
 function Grammar(parsed){
 
@@ -135,7 +110,7 @@ function Grammar(parsed){
 }
 
 
-function main(source, step){
+function main(source, step, arg){
   let parsed  = parseFile(source)
   let grammar = Grammar(parsed)
 
@@ -144,10 +119,12 @@ function main(source, step){
       return parsed
     case "keywords" :
       return grammar.keywords()
-    case "reserved" : /* 4.1 */
+    case "reserved" :
       return grammar.reserved()
     case "first" :
-      return grammar.first()
+      return grammar.first(arg)
+    case "follow" :
+      return grammar.follow(arg)
     default : 
       return 'se requiere un paso válido'
   }
@@ -155,6 +132,7 @@ function main(source, step){
 
 exports.grammar = Grammar
 exports.parseFile = parseFile
-// const argvs = process.argv
-// console.log(util.inspect(main(argvs[2], argvs[3]), false, null))
 
+console.log(util.inspect(
+  (argvs => main(argvs[2], argvs[3], argvs[4]))(process.argv)
+, false, null ))
