@@ -60,10 +60,10 @@
       [ `symbol expansion`,        `$2.unshift($1) ; $$ = $2` ]
     ],
     symbol : [
-      [ `KEY_ID`      ],
-      [ `KEY_STRING`  ],
-      [ `KEY_NUM`     ],
-      [ `STRING`,     `$$ = { type : 'string', value : $1 }` ],
+      [ `KEY_ID`,     `$$ = { type : 'keyword',    value : 'ID' }`],
+      [ `KEY_STRING`, `$$ = { type : 'keyword',    value : 'STRING' }`],
+      [ `KEY_NUM`,    `$$ = { type : 'keyword',    value : 'NUM' }`],
+      [ `STRING`,     `$$ = { type : 'string',     value : $1 }` ],
       [ `IDENTIFIER`, `$$ = { type : 'identifier', value : $1 }` ]
     ],
     term : [
