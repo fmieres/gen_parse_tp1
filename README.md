@@ -7,7 +7,7 @@
 Para instalar depenendencia, hacer `npm install`
 La librería usada para generar parseadores es [syntax-cli](https://www.npmjs.com/package/syntax-cli)
 
-*solo instalar librera si se desea generar el parser de lleca (que ya está incluído en el repo)*
+*solo instalar librería si se desea generar el parser de lleca (que ya está incluído en el repo)*
 
 ### Contenido
 
